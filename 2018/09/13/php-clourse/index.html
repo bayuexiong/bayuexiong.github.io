@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="闭包的介绍闭包是词法作用域的体现，一般编程语言有这些特性  函数是一阶值（First-class value），即函数可以作为另一个函数的返回值或参数，还可以作为一个变量的值。 函数可以嵌套定义，即在一个函数内部可以定义另一个函数。  三个关键点  函数 自由变量 作用域  自由变量1234let a = 1let b = function()&amp;#123;    console.log(a)&amp;#1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP 闭包">
+<meta property="og:url" content="http://blog.bayue.moe/2018/09/13/php-clourse/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="闭包的介绍闭包是词法作用域的体现，一般编程语言有这些特性  函数是一阶值（First-class value），即函数可以作为另一个函数的返回值或参数，还可以作为一个变量的值。 函数可以嵌套定义，即在一个函数内部可以定义另一个函数。  三个关键点  函数 自由变量 作用域  自由变量1234let a = 1let b = function()&amp;#123;    console.log(a)&amp;#1">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2018-09-27T06:25:42.552Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP 闭包">
+<meta name="twitter:description" content="闭包的介绍闭包是词法作用域的体现，一般编程语言有这些特性  函数是一阶值（First-class value），即函数可以作为另一个函数的返回值或参数，还可以作为一个变量的值。 函数可以嵌套定义，即在一个函数内部可以定义另一个函数。  三个关键点  函数 自由变量 作用域  自由变量1234let a = 1let b = function()&amp;#123;    console.log(a)&amp;#1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.bayue.moe/2018/09/13/php-clourse/"/>
+
+
+
+
+
+  <title>PHP 闭包 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.bayue.moe/2018/09/13/php-clourse/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="八月">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PHP 闭包</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-13T00:49:00+08:00">
+                2018-09-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="闭包的介绍"><a href="#闭包的介绍" class="headerlink" title="闭包的介绍"></a>闭包的介绍</h1><p>闭包是词法作用域的体现，一般编程语言有这些特性</p>
+<ol>
+<li>函数是一阶值（First-class value），即函数可以作为另一个函数的返回值或参数，还可以作为一个变量的值。</li>
+<li>函数可以嵌套定义，即在一个函数内部可以定义另一个函数。</li>
+</ol>
+<p>三个关键点</p>
+<ol>
+<li>函数</li>
+<li>自由变量</li>
+<li>作用域</li>
+</ol>
+<h2 id="自由变量"><a href="#自由变量" class="headerlink" title="自由变量"></a>自由变量</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> b = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子里函数b因为捕获了外部作用域（环境）中的变量a，因此形成了闭包。 而由于变量a并不属于函数b，所以在概念里被称之为「自由变量」。</p>
+<p>注意点：</p>
+<ol>
+<li>在一些语言里，「捕获」这一行为还有一个特点：闭包只会捕获自由变量的引用。</li>
+<li>在PHP中，需要使用<code>use</code>关键词显示调用自由变量</li>
+</ol>
+<h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><p>可以使用外部的「自由变量」，内部变量不能被访问，形成一个相对安全的访问环境</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>记住定义当时的外部环境</li>
+<li>封闭外部环境</li>
+<li>延迟执行</li>
+</ol>
+<h1 id="普通函数和闭包函数"><a href="#普通函数和闭包函数" class="headerlink" title="普通函数和闭包函数"></a>普通函数和闭包函数</h1><h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$func = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">$func();</span><br><span class="line"></span><br><span class="line">$a = <span class="string">'1'</span>;</span><br><span class="line">$func = <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($a)</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$func();</span><br></pre></td></tr></table></figure>
+<h2 id="作用域-1"><a href="#作用域-1" class="headerlink" title="作用域"></a>作用域</h2><ol>
+<li>闭包拥有独立的作用域，基本等同普通函数</li>
+<li>在方法中使用时，等同于实例的方法，可以直接使用$this（&gt;=5.4）</li>
+</ol>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><h3 id="this-的使用"><a href="#this-的使用" class="headerlink" title="$this 的使用"></a>$this 的使用</h3><p>在一次开发中遇到关于闭包的一个问题</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $data = <span class="keyword">$this</span>-&gt;isCache(<span class="string">'name'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;sayHello();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">sayHello</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'Hello, World'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $name</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $callback</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isCache</span><span class="params">($name, $callback)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $callback();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">array</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我希望在一个闭包中调用这个类的一个受保护的方法（这里假设是sayHello）,结果在运行的时候，直接出现了语法级别的报错。</p>
+<p>查了一些资料发现了问题</p>
+<ol>
+<li>5.3 版本不能直接在闭包中使用$this</li>
+</ol>
+<p>PHP的bug，在5.4中得以修复</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$that = <span class="keyword">$this</span>;</span><br><span class="line">data = <span class="keyword">$this</span>-&gt;isCache(<span class="string">'name'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">($that)</span> </span>&#123;</span><br><span class="line">    $that-&gt;sayHello(); <span class="comment">// 这里只能是public</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>看似这个问题解决了，不过在stackoverflow上一位热心人士的提醒中，这样是会出现一些问题的，因为这样传递$this, 是<strong>赋值传递</strong>，也就是说，在闭包中调用方法导致实例属性的变化不会反应到闭包外面，这样在一些特殊情况，会导致闭包内外属性不一致，所以这里最好使用<strong>引用传递</strong>，<strong>除非你知道你在干什么！</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$that = <span class="keyword">$this</span>;</span><br><span class="line">data = <span class="keyword">$this</span>-&gt;isCache(<span class="string">'name'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> <span class="title">use</span> <span class="params">(&amp;$that)</span> </span>&#123;</span><br><span class="line">    $that-&gt;sayHello(); <span class="comment">// 这里只能是public</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>如果在5.4版本下，不但可以直接使用$this，而且作用域等同于实例中的方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$data = <span class="keyword">$this</span>-&gt;isCache(<span class="string">'name'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    $that-&gt;sayHello(); <span class="comment">// 这里可以是任意限制符</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="Closure类"><a href="#Closure类" class="headerlink" title="Closure类"></a>Closure类</h2><ul>
+<li><a href="https://php.net/manual/en/closure.construct.php" target="_blank" rel="noopener">Closure::__construct</a> — Constructor that disallows instantiation</li>
+<li><a href="https://php.net/manual/en/closure.bind.php" target="_blank" rel="noopener">Closure::bind</a> — 复制一个闭包，绑定指定的$this对象和类作用域。</li>
+<li><a href="https://php.net/manual/en/closure.bindto.php" target="_blank" rel="noopener">Closure::bindTo</a> — 复制当前闭包对象，绑定指定的$this对象和类作用域。</li>
+<li><a href="https://php.net/manual/en/closure.call.php" target="_blank" rel="noopener">Closure::call</a> — 绑定指定的$this对象和类作用域并执行</li>
+<li><a href="https://php.net/manual/en/closure.fromcallable.php" target="_blank" rel="noopener">Closure::fromCallable</a> — 将一个可执行函数转换为闭包函数</li>
+</ul>
+<h3 id="bind和bindTo的区别"><a href="#bind和bindTo的区别" class="headerlink" title="bind和bindTo的区别"></a>bind和bindTo的区别</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// bind，相当把一个类的加上加上一个方法，并且将该方法转换成闭包</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> $sfoo = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> $ifoo = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line">$cl1 = <span class="keyword">static</span> <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> A::$sfoo;</span><br><span class="line">&#125;;</span><br><span class="line">$cl2 = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;ifoo;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">$bcl1 = Closure::bind($cl1, <span class="keyword">null</span>, <span class="string">'A'</span>);</span><br><span class="line">$bcl2 = Closure::bind($cl2, <span class="keyword">new</span> A(), <span class="string">'A'</span>);</span><br><span class="line"><span class="keyword">echo</span> $bcl1(), <span class="string">"\n"</span>; <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">echo</span> $bcl2(), <span class="string">"\n"</span>;<span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// bindTo,改变指定的$this对象和类作用域</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;val = $val;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getClosure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//returns closure bound to this object and scope</span></span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;val; &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$ob1 = <span class="keyword">new</span> A(<span class="number">1</span>);</span><br><span class="line">$ob2 = <span class="keyword">new</span> A(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">$cl = $ob1-&gt;getClosure();</span><br><span class="line"><span class="keyword">echo</span> $cl(), <span class="string">"\n"</span>;</span><br><span class="line">$cl = $cl-&gt;bindTo($ob2);</span><br><span class="line"><span class="keyword">echo</span> $cl(), <span class="string">"\n"</span>;</span><br></pre></td></tr></table></figure>
+<p>虽然两者看上去像，实际上不是一回事😓。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/13/namespace/" rel="next" title="PHP 命名空间">
+                <i class="fa fa-chevron-left"></i> PHP 命名空间
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/13/php-image-exif/" rel="prev" title="PHP 图片上传关于exif">
+                PHP 图片上传关于exif <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="八月" />
+          <p class="site-author-name" itemprop="name">八月</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#闭包的介绍"><span class="nav-number">1.</span> <span class="nav-text">闭包的介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#自由变量"><span class="nav-number">1.1.</span> <span class="nav-text">自由变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域"><span class="nav-number">1.2.</span> <span class="nav-text">作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#普通函数和闭包函数"><span class="nav-number">2.</span> <span class="nav-text">普通函数和闭包函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">2.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域-1"><span class="nav-number">2.2.</span> <span class="nav-text">作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意点"><span class="nav-number">2.3.</span> <span class="nav-text">注意点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#this-的使用"><span class="nav-number">2.3.1.</span> <span class="nav-text">$this 的使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Closure类"><span class="nav-number">2.4.</span> <span class="nav-text">Closure类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bind和bindTo的区别"><span class="nav-number">2.4.1.</span> <span class="nav-text">bind和bindTo的区别</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">八月</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

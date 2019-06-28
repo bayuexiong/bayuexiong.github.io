@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="1. 为什么需要命名空间 用户编写的代码与PHP内部的类/函数/常量或第三方类/函数/常量之间的名字冲突。 为很长的标识符名称(通常是为了缓解第一类问题而定义的)创建一个别名（或简短）的名称，提高源代码的可读性。  2. 什么受作用于命名空间 类 接口 函数 常量  3. 定义命名空间命名空间必须在所有的其他代码之前，一个以外：declare关键字。 还有注意点是： 12345678&amp;lt;?ph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP 命名空间">
+<meta property="og:url" content="http://blog.bayue.moe/2018/09/13/namespace/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. 为什么需要命名空间 用户编写的代码与PHP内部的类/函数/常量或第三方类/函数/常量之间的名字冲突。 为很长的标识符名称(通常是为了缓解第一类问题而定义的)创建一个别名（或简短）的名称，提高源代码的可读性。  2. 什么受作用于命名空间 类 接口 函数 常量  3. 定义命名空间命名空间必须在所有的其他代码之前，一个以外：declare关键字。 还有注意点是： 12345678&amp;lt;?ph">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2018-09-27T06:17:40.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP 命名空间">
+<meta name="twitter:description" content="1. 为什么需要命名空间 用户编写的代码与PHP内部的类/函数/常量或第三方类/函数/常量之间的名字冲突。 为很长的标识符名称(通常是为了缓解第一类问题而定义的)创建一个别名（或简短）的名称，提高源代码的可读性。  2. 什么受作用于命名空间 类 接口 函数 常量  3. 定义命名空间命名空间必须在所有的其他代码之前，一个以外：declare关键字。 还有注意点是： 12345678&amp;lt;?ph">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.bayue.moe/2018/09/13/namespace/"/>
+
+
+
+
+
+  <title>PHP 命名空间 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.bayue.moe/2018/09/13/namespace/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="八月">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PHP 命名空间</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-13T00:42:48+08:00">
+                2018-09-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-为什么需要命名空间"><a href="#1-为什么需要命名空间" class="headerlink" title="1. 为什么需要命名空间"></a>1. 为什么需要命名空间</h2><ol>
+<li>用户编写的代码与PHP内部的类/函数/常量或第三方类/函数/常量之间的名字冲突。</li>
+<li>为很长的标识符名称(通常是为了缓解第一类问题而定义的)创建一个别名（或简短）的名称，提高源代码的可读性。</li>
+</ol>
+<h2 id="2-什么受作用于命名空间"><a href="#2-什么受作用于命名空间" class="headerlink" title="2. 什么受作用于命名空间"></a>2. 什么受作用于命名空间</h2><ul>
+<li>类</li>
+<li>接口</li>
+<li>函数</li>
+<li>常量</li>
+</ul>
+<h2 id="3-定义命名空间"><a href="#3-定义命名空间" class="headerlink" title="3. 定义命名空间"></a>3. 定义命名空间</h2><p>命名空间必须在所有的其他代码之前，一个以外：declare关键字。</p>
+<p>还有注意点是：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里是允许有空行的</span></span><br><span class="line">    <span class="keyword">namespace</span> <span class="title">my</span>;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class">    </span>&#123;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这里不能有空行，<span class="meta">&lt;?php</span>必须位于文件的第一行</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">namespace</span> <span class="title">my</span>;</span><br></pre></td></tr></table></figure>
+<p>还需要注意的是，在使用define的使用，key值需要加入命名空间</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">namespace</span> <span class="title">my</span>;</span><br><span class="line">    define(<span class="string">'my\A'</span>,<span class="number">1</span>);</span><br><span class="line">    define(<span class="keyword">__NAMESPACE__</span> . <span class="string">'\B'</span>,<span class="number">1</span>); \\推荐</span><br></pre></td></tr></table></figure>
+<h2 id="4-使用命名空间"><a href="#4-使用命名空间" class="headerlink" title="4. 使用命名空间"></a>4. 使用命名空间</h2><p>命名空间有三种引用方式</p>
+<ol>
+<li>非限定名称</li>
+<li>限定名称</li>
+<li>完全名称</li>
+</ol>
+<p>file1.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Foo</span>\<span class="title">Bar</span>\<span class="title">subnamespace</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> FOO = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">foo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">staticmethod</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>file2.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Foo</span>\<span class="title">Bar</span>;</span><br><span class="line"><span class="keyword">include</span> <span class="string">'file1.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> FOO = <span class="number">2</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">foo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">staticmethod</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 非限定名称 */</span></span><br><span class="line">foo(); </span><br><span class="line"><span class="comment">// 解析为 Foo\Bar\foo resolves to function Foo\Bar\foo</span></span><br><span class="line"></span><br><span class="line">foo::staticmethod(); </span><br><span class="line"><span class="comment">// 解析为类 Foo\Bar\foo的静态方法staticmethod。resolves to </span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>\<span class="title">Bar</span>\<span class="title">foo</span>, <span class="title">method</span> <span class="title">staticmethod</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">echo</span> <span class="title">FOO</span>; // <span class="title">resolves</span> <span class="title">to</span> <span class="title">constant</span> <span class="title">Foo</span>\<span class="title">Bar</span>\<span class="title">FOO</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">/* 限定名称 */</span></span><br><span class="line">subnamespace\foo(); </span><br><span class="line"><span class="comment">// 解析为函数 Foo\Bar\subnamespace\foo</span></span><br><span class="line"></span><br><span class="line">subnamespace\foo::staticmethod(); </span><br><span class="line"><span class="comment">// 解析为类 Foo\Bar\subnamespace\foo, 以及类的方法 staticmethod</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> subnamespace\FOO; <span class="comment">// 解析为常量 Foo\Bar\subnamespace\FOO</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 完全限定名称 */</span></span><br><span class="line">\Foo\Bar\foo(); <span class="comment">// 解析为函数 Foo\Bar\foo</span></span><br><span class="line"></span><br><span class="line">\Foo\Bar\foo::staticmethod(); <span class="comment">// 解析为类 Foo\Bar\foo, 以及类的方法 staticmethod</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> \Foo\Bar\FOO; <span class="comment">// 解析为常量 Foo\Bar\FOO</span></span><br><span class="line"></span><br><span class="line">$a = \strlen(<span class="string">'h1'</span>); <span class="comment">//调用全局函数</span></span><br></pre></td></tr></table></figure>
+<p>一般我们只使用完全限定或者非限定的使用方式，限定名称类似于Python中的<code>import *</code>，如果你要使用同一个包中的很多类，又不行在文件开头出现大量的<code>use</code>，可以使用限定名称,不过非常不推荐，最佳实践是用了什么就引入什么，而不是直接引入包。</p>
+<h2 id="4-别名和导入"><a href="#4-别名和导入" class="headerlink" title="4. 别名和导入"></a>4. 别名和导入</h2><p>版本支持</p>
+<ol>
+<li>所有支持命名空间的版本都可以三种别名和导入的方式：类，接口，命名空间。</li>
+<li>PHP5.6之后支持了函数和常量</li>
+</ol>
+<p>注意点</p>
+<ol>
+<li>必须是完全限定名称。</li>
+<li>完全限定名称前的<code>\</code>可以省略，也推荐省略。</li>
+</ol>
+<p>例子<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">com</span>\<span class="title">wy</span>\<span class="title">Hello</span>;</span><br><span class="line"><span class="comment">// use \com\wy\Hello; 也可以，不过意义不大</span></span><br><span class="line"></span><br><span class="line">$h = <span class="keyword">new</span> Hello();</span><br></pre></td></tr></table></figure></p>
+<h2 id="5-全局命名空间"><a href="#5-全局命名空间" class="headerlink" title="5. 全局命名空间"></a>5. 全局命名空间</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$foo = <span class="keyword">new</span> \Foo();</span><br></pre></td></tr></table></figure>
+<p>​    注意点</p>
+<p>​    1. 系统函数可以不使用全局命名空间</p>
+<p>​    2. 如果系统函数被复写，那么就需要全局命名空间</p>
+<h2 id="6-PSR-4-Autoload-自动加载"><a href="#6-PSR-4-Autoload-自动加载" class="headerlink" title="6. PSR-4 Autoload 自动加载"></a>6. PSR-4 Autoload 自动加载</h2><p><a href="https://segmentfault.com/a/1190000002521658" target="_blank" rel="noopener">PSR-4规范</a></p>
+<p>例子</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">完整类名</th>
+<th style="text-align:left">命名空间前缀</th>
+<th style="text-align:left">文件基目录</th>
+<th style="text-align:left">文件路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">\Symfony\Core\Request</td>
+<td style="text-align:left">Symfony\Core</td>
+<td style="text-align:left">./vendor/Symfony/Core/</td>
+<td style="text-align:left">./vendor/Symfony/Core/Request.php</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-PSR-0-和-PSR-4"><a href="#7-PSR-0-和-PSR-4" class="headerlink" title="7. PSR-0 和 PSR-4"></a>7. PSR-0 和 PSR-4</h2><p><a href="https://segmentfault.com/a/1190000002616752" target="_blank" rel="noopener">PSR-0 和 PSR-4 的区别</a></p>
+<p>1.在composer中定义的NS，psr4必须以\结尾否则会抛出异常，psr0则不要求</p>
+<p>2.psr0里面最后一个\之后的类名中，如果有下划线，则会转换成路径分隔符，如Name_Space_Test会转换成Name\Space\Test.php。在psr4中下划线不存在实际意义</p>
+<p>3.psr0有更深的目录结构，比如定义了NS为 <code>Foo\Bar =&gt; vendor\foo\bar\src</code>，<br><code>use Foo\Bar\Tool\Request</code>调用NS。<br>如果以psr0方式加载，实际的目录为<code>vendor\foo\bar\src\Foo\Bar\Tool\Request.php</code><br>如果以psr4方式加载，实际目录为<code>vendor\foo\bar\src\Tool\Request.php</code></p>
+<h2 id="8-效率"><a href="#8-效率" class="headerlink" title="8. 效率"></a>8. 效率</h2><p>PSR-0和PSR-4的运行效率是相似的，但是都不如classmap的运行效率，因为Composer中，classmap是在array中直接查找的，而PSR-0和PSR-4都需要迭代一个数组，所以我们都使用classmap？，这也不对，因为classmap只是对应一个文件夹，对于其子文件夹是无力的，所以在开发时使用PSR-4，在发布正式版时使用classmap。</p>
+<p>composer中转换classmap的指令</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer dump-autoload -o</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/12/lumen-life-cycle/" rel="next" title="Lumen 生命周期">
+                <i class="fa fa-chevron-left"></i> Lumen 生命周期
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/13/php-clourse/" rel="prev" title="PHP 闭包">
+                PHP 闭包 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="八月" />
+          <p class="site-author-name" itemprop="name">八月</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-为什么需要命名空间"><span class="nav-number">1.</span> <span class="nav-text">1. 为什么需要命名空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-什么受作用于命名空间"><span class="nav-number">2.</span> <span class="nav-text">2. 什么受作用于命名空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-定义命名空间"><span class="nav-number">3.</span> <span class="nav-text">3. 定义命名空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-使用命名空间"><span class="nav-number">4.</span> <span class="nav-text">4. 使用命名空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-别名和导入"><span class="nav-number">5.</span> <span class="nav-text">4. 别名和导入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-全局命名空间"><span class="nav-number">6.</span> <span class="nav-text">5. 全局命名空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-PSR-4-Autoload-自动加载"><span class="nav-number">7.</span> <span class="nav-text">6. PSR-4 Autoload 自动加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-PSR-0-和-PSR-4"><span class="nav-number">8.</span> <span class="nav-text">7. PSR-0 和 PSR-4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-效率"><span class="nav-number">9.</span> <span class="nav-text">8. 效率</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">八月</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
