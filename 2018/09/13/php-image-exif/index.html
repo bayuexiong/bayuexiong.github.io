@@ -83,8 +83,6 @@
 
 
 
-  
-
 
   <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml" />
 
@@ -105,7 +103,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="获取图片的exif1$exif = exif_read_data($path, &apos;IFD0&apos;); 图片颠倒用手机拍摄时有可能会导致图像旋转，所以我们要根据exif里的值，进行图片旋转 1234567891011121314151617// 这里使用intervention/image操作图片$img = Image::make($file_path);$exif = $img-&amp;gt;exif()">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2018-09-27T06:27:46.574Z">
+<meta property="og:updated_time" content="2019-07-19T05:45:09.734Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP 图片上传关于exif">
 <meta name="twitter:description" content="获取图片的exif1$exif = exif_read_data($path, &apos;IFD0&apos;); 图片颠倒用手机拍摄时有可能会导致图像旋转，所以我们要根据exif里的值，进行图片旋转 1234567891011121314151617// 这里使用intervention/image操作图片$img = Image::make($file_path);$exif = $img-&amp;gt;exif()">
@@ -333,14 +331,15 @@
       
 
       
-        <h1 id="获取图片的exif"><a href="#获取图片的exif" class="headerlink" title="获取图片的exif"></a>获取图片的exif</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$exif = exif_read_data($path, <span class="string">'IFD0'</span>);</span><br></pre></td></tr></table></figure>
+        <h2 id="获取图片的exif"><a href="#获取图片的exif" class="headerlink" title="获取图片的exif"></a>获取图片的exif</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$exif = exif_read_data($path, <span class="string">'IFD0'</span>);</span><br></pre></td></tr></table></figure>
 <h2 id="图片颠倒"><a href="#图片颠倒" class="headerlink" title="图片颠倒"></a>图片颠倒</h2><p>用手机拍摄时有可能会导致图像旋转，所以我们要根据exif里的值，进行图片旋转</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里使用intervention/image操作图片</span></span><br><span class="line">$img = Image::make($file_path);</span><br><span class="line">$exif = $img-&gt;exif();</span><br><span class="line"></span><br><span class="line"> <span class="keyword">if</span> (<span class="keyword">isset</span>($exif[<span class="string">'Orientation'</span>]) &amp;&amp; $exif[<span class="string">'Orientation'</span>]) &#123;</span><br><span class="line">        <span class="keyword">switch</span> ($exif[<span class="string">'Orientation'</span>]) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                $img-&gt;rotate(<span class="number">180</span>)-&gt;save();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                $img-&gt;rotate(<span class="number">-90</span>)-&gt;save(); <span class="comment">// 逆时针转90度</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">8</span>:</span><br><span class="line">                $img-&gt;rotate(<span class="number">90</span>)-&gt;save(); <span class="comment">// 顺时针转90度</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>在使用<code>intervention/image</code>进行图片存储的时候，出现Orientation被置为0(unknow)的情况，可以先用<code>file_put_contents</code>来存储图片，再使用<code>intervention/image</code>进行图片编辑</p>
 </blockquote>
-<h3 id="视频缩略图颠倒"><a href="#视频缩略图颠倒" class="headerlink" title="视频缩略图颠倒"></a>视频缩略图颠倒</h3><p>顺便也提一下这个问题，这个和图片颠倒是一个问题，手机在竖屏拍摄的时候实际上是用了一个参数旋转了视频</p>
+<h2 id="视频缩略图颠倒"><a href="#视频缩略图颠倒" class="headerlink" title="视频缩略图颠倒"></a>视频缩略图颠倒</h2><p>顺便也提一下这个问题，这个和图片颠倒是一个问题，手机在竖屏拍摄的时候实际上是用了一个参数旋转了视频</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$out = [];</span><br><span class="line"><span class="comment">// 这里的2&gt;&amp;1不可以缺少，不然是直接输出，而不是赋值到out</span></span><br><span class="line">exec(<span class="string">"ffmpeg -i &#123;$file&#125; 2&gt;&amp;1"</span>, $out);</span><br><span class="line">$ret = implode(<span class="string">''</span>, $out);</span><br><span class="line"><span class="comment">// 判断rotation 是否存在</span></span><br><span class="line"><span class="keyword">if</span> (strpos($ret, <span class="string">'rotation of -90.00 degrees'</span>) !== <span class="keyword">false</span>) &#123;</span><br><span class="line">    exec(<span class="string">"ffmpeg -i &#123;$file&#125; -y -t 0.001 -vf \"transpose=1\"  &#123;$cover&#125;"</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    exec(<span class="string">"ffmpeg -i &#123;$file&#125; -y  -t 0.001 &#123;$cover&#125;"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
       
     </div>
     
@@ -499,7 +498,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#获取图片的exif"><span class="nav-number">1.</span> <span class="nav-text">获取图片的exif</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#图片颠倒"><span class="nav-number">1.1.</span> <span class="nav-text">图片颠倒</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#视频缩略图颠倒"><span class="nav-number">1.1.1.</span> <span class="nav-text">视频缩略图颠倒</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#获取图片的exif"><span class="nav-number">1.</span> <span class="nav-text">获取图片的exif</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片颠倒"><span class="nav-number">2.</span> <span class="nav-text">图片颠倒</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#视频缩略图颠倒"><span class="nav-number">3.</span> <span class="nav-text">视频缩略图颠倒</span></a></li></ol></div>
             
 
           </div>

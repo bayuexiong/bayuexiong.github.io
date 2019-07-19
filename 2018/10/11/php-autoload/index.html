@@ -83,6 +83,8 @@
 
 
 
+  
+
 
   <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml" />
 
@@ -96,17 +98,17 @@
 
 
 
-<meta name="description" content="1. 自动加载php的加载文件，一般分为三种情况  直接include/require，不属于自动加载，一般用于PHP5以前的版本。 使用__autoload()，PHP5.0引入，在PHP5.1.12之后不再推荐使用。 使用spl_auoload_register()，现在使用比较多，于PHP5.1.12之后加入，提供了一种更加灵活的方式加载文件。   具体实例 第一种没什么说的。主要还是看第二">
+<meta name="description" content="1. 自动加载php的加载文件，一般分为三种情况  直接include/require，不属于自动加载，一般用于PHP5以前的版本。 使用__autoload()，PHP5.0引入，在PHP5.1.12之后不再推荐使用。 使用spl_auoload_register()，现在使用比较多，于PHP5.1.12之后加入，提供了一种更加灵活的方式加载文件。   具体实例第一种没什么说的。主要还是看第二种">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PHP 自动加载">
 <meta property="og:url" content="http://blog.bayue.moe/2018/10/11/php-autoload/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1. 自动加载php的加载文件，一般分为三种情况  直接include/require，不属于自动加载，一般用于PHP5以前的版本。 使用__autoload()，PHP5.0引入，在PHP5.1.12之后不再推荐使用。 使用spl_auoload_register()，现在使用比较多，于PHP5.1.12之后加入，提供了一种更加灵活的方式加载文件。   具体实例 第一种没什么说的。主要还是看第二">
+<meta property="og:description" content="1. 自动加载php的加载文件，一般分为三种情况  直接include/require，不属于自动加载，一般用于PHP5以前的版本。 使用__autoload()，PHP5.0引入，在PHP5.1.12之后不再推荐使用。 使用spl_auoload_register()，现在使用比较多，于PHP5.1.12之后加入，提供了一种更加灵活的方式加载文件。   具体实例第一种没什么说的。主要还是看第二种">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2018-10-11T09:23:22.426Z">
+<meta property="og:updated_time" content="2019-07-19T05:44:26.136Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP 自动加载">
-<meta name="twitter:description" content="1. 自动加载php的加载文件，一般分为三种情况  直接include/require，不属于自动加载，一般用于PHP5以前的版本。 使用__autoload()，PHP5.0引入，在PHP5.1.12之后不再推荐使用。 使用spl_auoload_register()，现在使用比较多，于PHP5.1.12之后加入，提供了一种更加灵活的方式加载文件。   具体实例 第一种没什么说的。主要还是看第二">
+<meta name="twitter:description" content="1. 自动加载php的加载文件，一般分为三种情况  直接include/require，不属于自动加载，一般用于PHP5以前的版本。 使用__autoload()，PHP5.0引入，在PHP5.1.12之后不再推荐使用。 使用spl_auoload_register()，现在使用比较多，于PHP5.1.12之后加入，提供了一种更加灵活的方式加载文件。   具体实例第一种没什么说的。主要还是看第二种">
 
 
 
@@ -338,17 +340,16 @@
 <li>使用<code>spl_auoload_register()</code>，现在使用比较多，于PHP5.1.12之后加入，提供了一种更加灵活的方式加载文件。</li>
 </ol>
 <hr>
-<p><strong>具体实例</strong></p>
-<p>第一种没什么说的。主要还是看第二种和第三种。</p>
+<h3 id="具体实例"><a href="#具体实例" class="headerlink" title="具体实例"></a>具体实例</h3><p>第一种没什么说的。主要还是看第二种和第三种。</p>
 <p>假设在一个项目里面有两个文件</p>
 <p><code>Demo.php</code></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment"># coding</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>index.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__autoload</span><span class="params">($class_name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     $file = dirname(<span class="keyword">__FILE__</span>) . <span class="string">'/'</span> . $class_name;</span><br><span class="line">     <span class="keyword">if</span> (file_exist($file)) &#123;</span><br><span class="line">         <span class="keyword">include</span>($file);</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$obj = <span class="keyword">new</span> Demo();</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__autoload</span><span class="params">($class_name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     $file = dirname(<span class="keyword">__FILE__</span>) . <span class="string">'/'</span> . $class_name;</span><br><span class="line">     <span class="keyword">if</span> (file_exist($file)) &#123;</span><br><span class="line">         <span class="keyword">include</span>($file);</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line">$obj = <span class="keyword">new</span> Demo();</span><br></pre></td></tr></table></figure>
 <p><code>Demo.php</code>和<code>index.php</code>只要在一个同级目录内，php变会很智能的加载<code>Demo.php</code>,不需要显示的操作。</p>
 <p>但是这里还是存在弊端的，比如一个项目中只能有一个<code>__autoload()</code>，这也意味着自动加载的价值变得很低，于是PHP便在PHP5.1.12版本之后添加了<code>spl_autoload_register()</code>，它接受一个回调函数，使得自动加载更加的灵活。</p>
 <p><code>index.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_autoload</span><span class="params">($class_name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $file = dirname(<span class="keyword">__FILE__</span>) . <span class="string">'/'</span> . $class_name;</span><br><span class="line">    <span class="keyword">if</span> (file_exist($file)) &#123;</span><br><span class="line">        <span class="keyword">include</span>($file);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">spl_autoload_register(<span class="string">'my_autoload'</span>);</span><br><span class="line"></span><br><span class="line">$obj = <span class="keyword">new</span> Demo();</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_autoload</span><span class="params">($class_name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $file = dirname(<span class="keyword">__FILE__</span>) . <span class="string">'/'</span> . $class_name;</span><br><span class="line">    <span class="keyword">if</span> (file_exist($file)) &#123;</span><br><span class="line">        <span class="keyword">include</span>($file);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">spl_autoload_register(<span class="string">'my_autoload'</span>);</span><br><span class="line">$obj = <span class="keyword">new</span> Demo();</span><br></pre></td></tr></table></figure>
 <p>之前的<code>Demo.php</code>不做修改，将<code>index.php</code>如此修改，便可以同样的功能。</p>
 <p>关于<code>spl_autoload_register()</code>更多的内容可以查看官方文档。</p>
 <p><a href="http://php.net/manual/zh/function.spl-autoload-register.php" target="_blank" rel="noopener">http://php.net/manual/zh/function.spl-autoload-register.php</a></p>
@@ -366,43 +367,26 @@
 <p>在上线代码时可以使用<code>composer dump-autoload -o</code> 转换 <code>PSR-0/4 autoloading</code> 到 <code>classmap</code> 获得更快的载入速度。这特别适用于生产环境，但可能需要一些时间来运行，因此它目前不是默认设置。至于为什么，看完源代码就清晰了。</p>
 </blockquote>
 <h2 id="3-简单实现一个Composer自动加载"><a href="#3-简单实现一个Composer自动加载" class="headerlink" title="3. 简单实现一个Composer自动加载"></a>3. 简单实现一个Composer自动加载</h2><p>简单实现ClassMap的自动加载功能</p>
-<p><a href="https://github.com/bayuexiong/simple-composer/tree/master/vendor" target="_blank" rel="noopener">https://github.com/bayuexiong/simple-composer/tree/master/vendor</a></p>
-<p>使用代码和Composer一样。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> <span class="string">'vendor/autoload.php'</span>;</span><br><span class="line"></span><br><span class="line">$obj = <span class="keyword">new</span> Demo(<span class="string">'gg'</span>);</span><br><span class="line">$obj-&gt;sayName();</span><br><span class="line"></span><br><span class="line">$obj2 = <span class="keyword">new</span> Other(<span class="string">'aa'</span>);</span><br><span class="line">$obj2-&gt;sayName();</span><br></pre></td></tr></table></figure></p>
+<p><code>https://github.com/bayuexiong/simple-composer/tree/master/vendor</code></p>
+<p>使用代码和Composer一样。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> <span class="string">'vendor/autoload.php'</span>;</span><br><span class="line"></span><br><span class="line">$obj = <span class="keyword">new</span> Demo(<span class="string">'gg'</span>);</span><br><span class="line">$obj-&gt;sayName();</span><br><span class="line"></span><br><span class="line">$obj2 = <span class="keyword">new</span> Other(<span class="string">'aa'</span>);</span><br><span class="line">$obj2-&gt;sayName();</span><br></pre></td></tr></table></figure>
 <h2 id="4-如何选择自动加载机制"><a href="#4-如何选择自动加载机制" class="headerlink" title="4. 如何选择自动加载机制"></a>4. 如何选择自动加载机制</h2><ol>
-<li><p>在程序一开始运行的时候，使用数组，将项目内所有的文件记录下来，实现自动加载(如果使用cache，应该还hold的住)，<code>symfony</code>使用这种形式，代码如下。<br><a href="https://github.com/symfony/class-loader/blob/master/ClassMapGenerator.php" target="_blank" rel="noopener">https://github.com/symfony/class-loader/blob/master/ClassMapGenerator.php</a></p>
-</li>
+<li>在程序一开始运行的时候，使用数组，将项目内所有的文件记录下来，实现自动加载(如果使用cache，应该还hold的住)，<code>symfony</code>使用这种形式，代码如下。</li>
+</ol>
+<p><code>https://github.com/symfony/class-loader/blob/master/ClassMapGenerator.php</code></p>
+<ol start="2">
 <li><p>class名和路径对应，便于查找，但是这样缺乏灵活性，框架的侵入性太强了，代码很受框架的限制，像ThinkPHP，CI就是使用这种形式。</p>
 </li>
 <li><p>组合使用，像Laravel就是使用PSR4和symfony的classLoader。</p>
 </li>
 </ol>
-<h2 id="5-CI框架的自动加载"><a href="#5-CI框架的自动加载" class="headerlink" title="5. CI框架的自动加载"></a>5. CI框架的自动加载</h2><p>现在公司使用CI框架的情况比较多，所以对CI框架的自动加载做一些详细的介绍。</p>
-<p>对于一个普通的CI加载类的方式：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">$this</span>-&gt;load-&gt;library(<span class="string">'myclass'</span>);</span><br></pre></td></tr></table></figure>
-<p>CI框架的内部是如何运行的呢？首先上个流程图</p>
-<p>其实CI框架的自动加载并没有借助spl系列的函数，这可能与CI框架诞生的年岁有关，在那个时期不失为一种优秀的自动加载方法。</p>
-<p>但是现在来说，算不上优秀，其对命名的规范太过苛刻了，效率也谈不上高效，当然CI框架的整体速度还是很快的，毕竟像<code>symfony</code>之流的框架为了实现完成解耦，付出了很多性能上的代价。</p>
-<p><strong>Tips</strong></p>
-<blockquote>
-<p>对于一个普通的加载类<br><code>$this-&gt;load-&gt;library($library, $param, $object_name);</code></p>
-<ol>
-<li><code>$library</code> 可以是一个数组key代表需要加载的类，value则是obejct_name。</li>
-<li><code>$param</code> 需要一个数组，作于传入构造器中的值</li>
-<li><code>$object_name</code> 和<code>$this-&gt;load-&gt;model(calss, object_name)</code>中第二个参数一样，加载完之后可以<code>$this-&gt;object_name-&gt;sayHello()</code></li>
-</ol>
-</blockquote>
-<p>具体的可以结合CI的文档再加上阅读CI的源代码，的确CI的文档相比其他的框架比较全面，但是一些技巧也没有详尽的介绍。</p>
-<h2 id="6-小结"><a href="#6-小结" class="headerlink" title="6. 小结"></a>6. 小结</h2><p>使用Composer吧！使用RSP4命名空间规范吧！这样各个组件与组件之间，自己的代码和别人的代码都可以无痛的结合，不需要花费额外的精力去处理文件加载的问题。</p>
-<h2 id="7-补充"><a href="#7-补充" class="headerlink" title="7. 补充"></a>7. 补充</h2><ol>
-<li><a href="http://php.net/manual/zh/language.namespaces.php" target="_blank" rel="noopener">命名空间</a>，命名空间提供了一种灵活的效率更高的辅助自动加载的方法。</li>
-<li><a href="https://segmentfault.com/a/1190000002521658" target="_blank" rel="noopener">PSR4</a> 规范命名空间的定义，是最近比较流行的命名空间规范。</li>
-</ol>
 <hr>
 <p>材料参考:</p>
 <ol>
-<li><a href="https://github.com/qinjx/adv_php_book/blob/master/class_autoload.md" target="_blank" rel="noopener">https://github.com/qinjx/adv_php_book/blob/master/class_autoload.md</a></li>
 <li><a href="http://php.net/manual/zh/function.spl-autoload-register.php" target="_blank" rel="noopener">spl_autoload_register</a></li>
 <li><a href="http://php.net/manual/zh/function.autoload.php" target="_blank" rel="noopener">__atuoload</a></li>
+<li><a href="http://php.net/manual/zh/language.namespaces.php" target="_blank" rel="noopener">命名空间</a>，命名空间提供了一种灵活的效率更高的辅助自动加载的方法。</li>
+<li><a href="https://segmentfault.com/a/1190000002521658" target="_blank" rel="noopener">PSR4</a> 规范命名空间的定义，是最近比较流行的命名空间规范。</li>
 </ol>
 
       
@@ -559,7 +543,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-自动加载"><span class="nav-number">1.</span> <span class="nav-text">1. 自动加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Composer"><span class="nav-number">2.</span> <span class="nav-text">2. Composer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-简单实现一个Composer自动加载"><span class="nav-number">3.</span> <span class="nav-text">3. 简单实现一个Composer自动加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-如何选择自动加载机制"><span class="nav-number">4.</span> <span class="nav-text">4. 如何选择自动加载机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-CI框架的自动加载"><span class="nav-number">5.</span> <span class="nav-text">5. CI框架的自动加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-小结"><span class="nav-number">6.</span> <span class="nav-text">6. 小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-补充"><span class="nav-number">7.</span> <span class="nav-text">7. 补充</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-自动加载"><span class="nav-number">1.</span> <span class="nav-text">1. 自动加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实例"><span class="nav-number">1.1.</span> <span class="nav-text">具体实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Composer"><span class="nav-number">2.</span> <span class="nav-text">2. Composer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-简单实现一个Composer自动加载"><span class="nav-number">3.</span> <span class="nav-text">3. 简单实现一个Composer自动加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-如何选择自动加载机制"><span class="nav-number">4.</span> <span class="nav-text">4. 如何选择自动加载机制</span></a></li></ol></div>
             
 
           </div>
